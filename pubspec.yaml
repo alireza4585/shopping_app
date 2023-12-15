@@ -31,11 +31,24 @@ dependencies:
   flutter:
     sdk: flutter
   smooth_page_indicator: ^1.0.0+2
-  firebase_auth: ^4.3.0
   either_dart: ^0.3.0
   bloc: 8.1.0 
   flutter_bloc: 8.1.1 
   flutter_screenutil: ^5.9.0
+  dotted_line: ^3.1.0
+  dio: ^5.1.2
+  get_it: 7.2.0
+  shared_preferences: 2.0.15  
+  cached_network_image: 3.2.3 
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  zarinpal: ^1.0.5
+  url_launcher: ^6.1.11
+  uni_links: ^0.5.1
+  loading_indicator: ^3.1.0
+  intl: ^0.18.1
 
 
   # The following adds the Cupertino Icons font to your application.
