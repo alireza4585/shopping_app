@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shopping_app/Screens/product_detail_screen.dart';
 import 'package:shopping_app/constants/colors.dart';
+import 'package:shopping_app/data/model/banner.dart';
+import 'package:shopping_app/data/repository/banner_repository.dart';
+import 'package:shopping_app/gitit/gitit.dart';
+import 'package:shopping_app/util/cach_image.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class Home_Screen extends StatefulWidget {
@@ -12,118 +17,131 @@ class Home_Screen extends StatefulWidget {
 }
 
 final _control = PageController();
+List<Banner_model>? model;
 
 class _Home_ScreenState extends State<Home_Screen> {
+  IBannerRepository _bannerRepository = locator.get();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor,
       body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            AppBarr(),
-            SearchBox(),
-            bannerr(),
-            SliverPadding(
-              padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 25.h),
-              sliver: SliverGrid(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                ProductDetailScreen(
-                              index: index,
+          child: CustomScrollView(
+        slivers: [
+          AppBarr(),
+          SearchBox(),
+          SliverToBoxAdapter(
+            child: IconButton(
+              onPressed: () async {
+                List<Banner_model> a = await _bannerRepository.getbanner();
+                print(a[0].id);
+                setState(() {
+                  model = a;
+                });
+              },
+              icon: Icon(Icons.get_app),
+            ),
+          ),
+          if (model != null) bannerr(model!),
+          SliverPadding(
+            padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 25.h),
+            sliver: SliverGrid(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              ProductDetailScreen(
+                            index: index,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15.r),
+                      ),
+                      child: Stack(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 110.h),
+                            child: Image.asset(
+                              'images/${index + 1}.webp',
+                              height: 200,
+                              width: 190,
+                              fit: BoxFit.cover,
                             ),
                           ),
-                        );
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(15.r),
-                        ),
-                        child: Stack(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(bottom: 110.h),
-                              child: Image.asset(
-                                'images/${index + 1}.webp',
-                                height: 200,
-                                width: 190,
-                                fit: BoxFit.cover,
+                          Positioned(
+                            top: 155.h,
+                            left: 20.w,
+                            child: Text(
+                              'name',
+                              style: TextStyle(
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                            Positioned(
-                              top: 155.h,
-                              left: 20.w,
-                              child: Text(
-                                'name',
-                                style: TextStyle(
-                                  fontSize: 18.sp,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              top: 210.h,
-                              right: 0,
-                              left: 0,
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 15.w),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'pice',
-                                      style: TextStyle(
-                                        fontSize: 18.sp,
-                                        fontWeight: FontWeight.bold,
-                                        color: black.withOpacity(0.7),
-                                      ),
+                          ),
+                          Positioned(
+                            top: 210.h,
+                            right: 0,
+                            left: 0,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 15.w),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'pice',
+                                    style: TextStyle(
+                                      fontSize: 18.sp,
+                                      fontWeight: FontWeight.bold,
+                                      color: black.withOpacity(0.7),
                                     ),
-                                    Container(
-                                      width: 40.w,
-                                      height: 40.h,
-                                      decoration: BoxDecoration(
-                                        color: black.withOpacity(0.7),
-                                        borderRadius:
-                                            BorderRadius.circular(11.r),
-                                      ),
-                                      child: const Icon(
-                                        Icons.shopping_cart_outlined,
-                                        color: Colors.white,
-                                      ),
+                                  ),
+                                  Container(
+                                    width: 40.w,
+                                    height: 40.h,
+                                    decoration: BoxDecoration(
+                                      color: black.withOpacity(0.7),
+                                      borderRadius: BorderRadius.circular(11.r),
                                     ),
-                                  ],
-                                ),
+                                    child: const Icon(
+                                      Icons.shopping_cart_outlined,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    );
-                  },
-                  childCount: 4,
-                ),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisExtent: 270,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                ),
+                    ),
+                  );
+                },
+                childCount: 4,
+              ),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisExtent: 270,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
               ),
             ),
-          ],
-        ),
-      ),
+          ),
+        ],
+      )),
     );
   }
 
-  SliverToBoxAdapter bannerr() {
+  Widget bannerr(List<Banner_model> banner) {
     return SliverToBoxAdapter(
       child: Column(
         children: [
@@ -134,45 +152,25 @@ class _Home_ScreenState extends State<Home_Screen> {
               controller: _control,
               scrollDirection: Axis.horizontal,
               children: [
-                Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.r),
-                      color: Colors.white,
+                ...List.generate(banner.length, (index) {
+                  return Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.r),
+                        color: Colors.white,
+                      ),
+                      child: CachedImage(imageUrl: banner[index].thumbnail),
                     ),
-                    child: banner_builder(0),
-                  ),
-                ),
-                Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.r),
-                      color: Colors.white,
-                    ),
-                    child: banner_builder(1),
-                  ),
-                ),
-                Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.r),
-                      color: Colors.white,
-                    ),
-                    child: banner_builder(2),
-                  ),
-                ),
+                  );
+                })
               ],
             ),
           ),
           SmoothPageIndicator(
             controller: _control,
-            count: 3,
+            count: banner.length,
             effect: WormEffect(
               dotHeight: 11.h,
               dotWidth: 11.w,

@@ -1,11 +1,13 @@
 class Banner_model {
   String thumbnail;
   String id;
-  Banner_model(this.thumbnail, this.id);
-  factory Banner_model.fromJson(Map<String, dynamic> Json) {
+  String? collectionId;
+  Banner_model(this.collectionId, this.id, this.thumbnail);
+  factory Banner_model.fromJson(Map<String, dynamic> jsonObject) {
     return Banner_model(
-      Json['thumbnail'],
-      Json['id'],
+      jsonObject['collectionId'],
+      jsonObject['id'],
+      'https://pocketbase--bmabfep1.iran.liara.run/api/files/${jsonObject['collectionId']}/${jsonObject['id']}/${jsonObject['thumbnail']}',
     );
   }
 }

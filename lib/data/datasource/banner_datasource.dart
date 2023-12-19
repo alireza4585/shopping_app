@@ -15,8 +15,8 @@ class BannerRemoteDatasource extends IBannerDatasource {
   Future<List<Banner_model>> getbanner() async {
     var respones = await _dio.get('collections/Banner/records');
     try {
-      return respones.data['items']
-          .map<Banner_model>((jsonObject) => Banner_model.fromJson(jsonObject))
+      return respones.data["items"]
+          .map<Banner_model>((Json) => Banner_model.fromJson(Json))
           .toList();
     } on DioError catch (ex) {
       throw ApiException(ex.response?.statusCode, ex.response?.data['message']);

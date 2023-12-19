@@ -1,15 +1,25 @@
+import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shopping_app/data/datasource/banner_datasource.dart';
+import 'package:shopping_app/data/repository/banner_repository.dart';
+import 'package:shopping_app/util/dio.dart';
 
 var locator = GetIt.instance;
 Future<void> getItInit() async {
-  _initDatasoruces();
+  await _initComponents();
+  await _initDatasoruces();
 
   _initRepositories();
 }
 
-void _initDatasoruces() {
+Future<void> _initComponents() async {
+  locator.registerSingleton<Dio>(DioProvider.createDioWithoutHeader());
+}
+
+Future<void> _initDatasoruces() async {
   locator.registerFactory<IBannerDatasource>(() => BannerRemoteDatasource());
 }
 
-void _initRepositories() {}
+void _initRepositories() {
+  locator.registerFactory<IBannerRepository>(() => BannerRepository());
+}
