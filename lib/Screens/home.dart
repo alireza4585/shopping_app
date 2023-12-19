@@ -17,7 +17,6 @@ class Home_Screen extends StatefulWidget {
 }
 
 final _control = PageController();
-List<Banner_model>? model;
 
 class _Home_ScreenState extends State<Home_Screen> {
   IBannerRepository _bannerRepository = locator.get();
@@ -31,19 +30,6 @@ class _Home_ScreenState extends State<Home_Screen> {
         slivers: [
           AppBarr(),
           SearchBox(),
-          SliverToBoxAdapter(
-            child: IconButton(
-              onPressed: () async {
-                List<Banner_model> a = await _bannerRepository.getbanner();
-                print(a[0].id);
-                setState(() {
-                  model = a;
-                });
-              },
-              icon: Icon(Icons.get_app),
-            ),
-          ),
-          if (model != null) bannerr(model!),
           SliverPadding(
             padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 25.h),
             sliver: SliverGrid(

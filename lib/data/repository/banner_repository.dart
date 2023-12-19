@@ -5,15 +5,19 @@ import 'package:shopping_app/gitit/gitit.dart';
 import 'package:shopping_app/util/exception.dart';
 
 abstract class IBannerRepository {
-  Future<List<Banner_model>> getbanner();
+  Future<Either<String, List<Banner_model>>> getbanner();
 }
 
 class BannerRepository extends IBannerRepository {
   final IBannerDatasource _bannerDatasource = locator.get();
   @override
-  Future<List<Banner_model>> getbanner() async {
+  Future<Either<String, List<Banner_model>>> getbanner() async {
     // ignore: unused_local_variable
-    var response = await _bannerDatasource.getbanner();
-    return response;
+    try {
+      var response = await _bannerDatasource.getbanner();
+      return Right(response);
+    } on ApiException catch (ex) {
+      return Left(ex.message ?? 'error');
+    }
   }
 }
