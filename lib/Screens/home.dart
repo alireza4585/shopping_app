@@ -3,11 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shopping_app/Screens/product_detail_screen.dart';
 import 'package:shopping_app/constants/colors.dart';
+import 'package:shopping_app/data/bloc/home_bloc/home_bloc.dart';
 import 'package:shopping_app/data/model/banner.dart';
 import 'package:shopping_app/data/repository/banner_repository.dart';
 import 'package:shopping_app/gitit/gitit.dart';
 import 'package:shopping_app/util/cach_image.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+
+import '../data/bloc/home_bloc/home_state.dart';
 
 class Home_Screen extends StatefulWidget {
   const Home_Screen({super.key});
@@ -26,104 +29,123 @@ class _Home_ScreenState extends State<Home_Screen> {
     return Scaffold(
       backgroundColor: backgroundColor,
       body: SafeArea(
-          child: CustomScrollView(
-        slivers: [
-          AppBarr(),
-          SearchBox(),
-          SliverPadding(
-            padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 25.h),
-            sliver: SliverGrid(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              ProductDetailScreen(
-                            index: index,
+          child: BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
+        if (state is HomeLoadingState) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is HomeRequestSuccessState) {
+          return CustomScrollView(
+            slivers: [
+              AppBarr(),
+              SearchBox(),
+              state.bannerList.fold(((left) {
+                return SliverToBoxAdapter(
+                  child: Text(left),
+                );
+              }), ((right) {
+                return bannerr(right);
+              })),
+              SliverPadding(
+                padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 25.h),
+                sliver: SliverGrid(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  ProductDetailScreen(
+                                index: index,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15.r),
+                          ),
+                          child: Stack(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(bottom: 110.h),
+                                child: Image.asset(
+                                  'images/${index + 1}.webp',
+                                  height: 200,
+                                  width: 190,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              Positioned(
+                                top: 155.h,
+                                left: 20.w,
+                                child: Text(
+                                  'name',
+                                  style: TextStyle(
+                                    fontSize: 18.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                top: 210.h,
+                                right: 0,
+                                left: 0,
+                                child: Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 15.w),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'pice',
+                                        style: TextStyle(
+                                          fontSize: 18.sp,
+                                          fontWeight: FontWeight.bold,
+                                          color: black.withOpacity(0.7),
+                                        ),
+                                      ),
+                                      Container(
+                                        width: 40.w,
+                                        height: 40.h,
+                                        decoration: BoxDecoration(
+                                          color: black.withOpacity(0.7),
+                                          borderRadius:
+                                              BorderRadius.circular(11.r),
+                                        ),
+                                        child: const Icon(
+                                          Icons.shopping_cart_outlined,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       );
                     },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15.r),
-                      ),
-                      child: Stack(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 110.h),
-                            child: Image.asset(
-                              'images/${index + 1}.webp',
-                              height: 200,
-                              width: 190,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          Positioned(
-                            top: 155.h,
-                            left: 20.w,
-                            child: Text(
-                              'name',
-                              style: TextStyle(
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            top: 210.h,
-                            right: 0,
-                            left: 0,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 15.w),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'pice',
-                                    style: TextStyle(
-                                      fontSize: 18.sp,
-                                      fontWeight: FontWeight.bold,
-                                      color: black.withOpacity(0.7),
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 40.w,
-                                    height: 40.h,
-                                    decoration: BoxDecoration(
-                                      color: black.withOpacity(0.7),
-                                      borderRadius: BorderRadius.circular(11.r),
-                                    ),
-                                    child: const Icon(
-                                      Icons.shopping_cart_outlined,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-                childCount: 4,
+                    childCount: 4,
+                  ),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisExtent: 270,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                  ),
+                ),
               ),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisExtent: 270,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-              ),
-            ),
-          ),
-        ],
-      )),
+            ],
+          );
+        } else {
+          return const Center(
+            child: Text('error'),
+          );
+        }
+      })),
     );
   }
 
