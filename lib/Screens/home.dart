@@ -5,6 +5,7 @@ import 'package:shopping_app/Screens/product_detail_screen.dart';
 import 'package:shopping_app/constants/colors.dart';
 import 'package:shopping_app/data/bloc/home_bloc/home_bloc.dart';
 import 'package:shopping_app/data/model/banner.dart';
+import 'package:shopping_app/data/model/products.dart';
 import 'package:shopping_app/data/repository/banner_repository.dart';
 import 'package:shopping_app/gitit/gitit.dart';
 import 'package:shopping_app/util/cach_image.dart';
@@ -44,99 +45,11 @@ class _Home_ScreenState extends State<Home_Screen> {
               }), ((right) {
                 return bannerr(right);
               })),
-              SliverPadding(
-                padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 25.h),
-                sliver: SliverGrid(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  ProductDetailScreen(
-                                index: index,
-                              ),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(15.r),
-                          ),
-                          child: Stack(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(bottom: 110.h),
-                                child: Image.asset(
-                                  'images/${index + 1}.webp',
-                                  height: 200,
-                                  width: 190,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              Positioned(
-                                top: 155.h,
-                                left: 20.w,
-                                child: Text(
-                                  'name',
-                                  style: TextStyle(
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                top: 210.h,
-                                right: 0,
-                                left: 0,
-                                child: Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 15.w),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        'pice',
-                                        style: TextStyle(
-                                          fontSize: 18.sp,
-                                          fontWeight: FontWeight.bold,
-                                          color: black.withOpacity(0.7),
-                                        ),
-                                      ),
-                                      Container(
-                                        width: 40.w,
-                                        height: 40.h,
-                                        decoration: BoxDecoration(
-                                          color: black.withOpacity(0.7),
-                                          borderRadius:
-                                              BorderRadius.circular(11.r),
-                                        ),
-                                        child: const Icon(
-                                          Icons.shopping_cart_outlined,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                    childCount: 4,
-                  ),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisExtent: 270,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                  ),
+              state.ProductList.fold(
+                (left) => SliverToBoxAdapter(
+                  child: Text(left),
                 ),
+                (right) => Product_widget(right),
               ),
             ],
           );
@@ -146,6 +59,114 @@ class _Home_ScreenState extends State<Home_Screen> {
           );
         }
       })),
+    );
+  }
+
+  Widget Product_widget(List<Products> products) {
+    return SliverPadding(
+      padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 25.h),
+      sliver: SliverGrid(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) {
+            return GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => ProductDetailScreen(
+                      index: index,
+                    ),
+                  ),
+                );
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15.r),
+                ),
+                child: Stack(
+                  children: [
+                    Padding(
+                        padding: EdgeInsets.only(bottom: 110.h),
+                        child: SizedBox(
+                          width: 200.w,
+                          height: 150.h,
+                          child: CachedImage(
+                            imageUrl: products[index].image,
+                          ),
+                        )),
+                    Positioned(
+                      top: 155.h,
+                      left: 20.w,
+                      child: Text(
+                        products[index].name,
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 210.h,
+                      right: 0,
+                      left: 0,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 15.w),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              children: [
+                                Text(
+                                  products[index].price.toString(),
+                                  style: TextStyle(
+                                    fontSize: 18.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: black.withOpacity(0.7),
+                                  ),
+                                ),
+                                if (products[index].have_discount)
+                                  Text(
+                                    products[index]
+                                        .priceWithdisconunt!
+                                        .toStringAsFixed(2),
+                                    style: TextStyle(
+                                      fontSize: 18.sp,
+                                      fontWeight: FontWeight.bold,
+                                      color: black.withOpacity(0.7),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                            Container(
+                              width: 40.w,
+                              height: 40.h,
+                              decoration: BoxDecoration(
+                                color: black.withOpacity(0.7),
+                                borderRadius: BorderRadius.circular(11.r),
+                              ),
+                              child: const Icon(
+                                Icons.shopping_cart_outlined,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+          childCount: products.length,
+        ),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          mainAxisExtent: 270,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+        ),
+      ),
     );
   }
 
@@ -169,7 +190,11 @@ class _Home_ScreenState extends State<Home_Screen> {
                         borderRadius: BorderRadius.circular(10.r),
                         color: Colors.white,
                       ),
-                      child: CachedImage(imageUrl: banner[index].thumbnail),
+                      child: CachedImage(
+                        imageUrl: banner[index].thumbnail,
+                        banner: true,
+                        radius: 10,
+                      ),
                     ),
                   );
                 })
