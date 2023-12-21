@@ -95,11 +95,12 @@ class _Home_ScreenState extends State<Home_Screen> {
                           ),
                         )),
                     Positioned(
-                      top: 155.h,
+                      top: 160.h,
                       left: 20.w,
                       child: Text(
                         products[index].name,
                         style: TextStyle(
+                          color: Colors.black,
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w600,
                         ),
@@ -115,14 +116,48 @@ class _Home_ScreenState extends State<Home_Screen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  products[index].price.toString(),
-                                  style: TextStyle(
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.bold,
-                                    color: black.withOpacity(0.7),
-                                  ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      products[index].price.toString(),
+                                      style: TextStyle(
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.bold,
+                                        color: products[index].have_discount
+                                            ? Colors.grey
+                                            : Colors.black,
+                                        decoration:
+                                            products[index].have_discount
+                                                ? TextDecoration.lineThrough
+                                                : TextDecoration.none,
+                                        decorationColor: Colors.grey,
+                                      ),
+                                    ),
+                                    SizedBox(width: 7.w),
+                                    if (products[index].have_discount)
+                                      Container(
+                                        decoration: const BoxDecoration(
+                                          color: Colors.red,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(15),
+                                          ),
+                                        ),
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 2, horizontal: 6),
+                                          child: Text(
+                                            '% ${products[index].discount.toString()} ',
+                                            style: TextStyle(
+                                              fontSize: 12.sp,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                  ],
                                 ),
                                 if (products[index].have_discount)
                                   Text(
@@ -130,7 +165,7 @@ class _Home_ScreenState extends State<Home_Screen> {
                                         .priceWithdisconunt!
                                         .toStringAsFixed(2),
                                     style: TextStyle(
-                                      fontSize: 18.sp,
+                                      fontSize: 16.sp,
                                       fontWeight: FontWeight.bold,
                                       color: black.withOpacity(0.7),
                                     ),
@@ -144,8 +179,9 @@ class _Home_ScreenState extends State<Home_Screen> {
                                 color: black.withOpacity(0.7),
                                 borderRadius: BorderRadius.circular(11.r),
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.shopping_cart_outlined,
+                                size: 25.w,
                                 color: Colors.white,
                               ),
                             ),
