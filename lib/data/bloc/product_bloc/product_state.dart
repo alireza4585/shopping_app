@@ -1,16 +1,16 @@
 import 'package:either_dart/either.dart';
 import 'package:shopping_app/data/model/product_detail_model.dart';
-import 'package:shopping_app/data/model/products.dart';
 
-abstract class HomeState {}
+abstract class ProductState {}
 
-class HomeInitState extends HomeState {}
+class ProductInitState extends ProductState {}
 
-class HomeLoadingState extends HomeState {}
+class ProductLoadingState extends ProductState {}
 
 // ignore: must_be_immutable
-class HomeRequestSuccessState extends HomeState {
+class ProductRequestSuccessState extends ProductState {
+  // ignore: non_constant_identifier_names
   Either<String, List<Product_detail>> ProductdetailList;
 
-  HomeRequestSuccessState(this.ProductdetailList);
+  ProductRequestSuccessState(this.ProductdetailList);
 }
