@@ -80,6 +80,13 @@ class _Home_ScreenState extends State<Home_Screen> {
               },
               child: Container(
                 decoration: BoxDecoration(
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color.fromARGB(255, 185, 185, 185),
+                      offset: Offset(1, 1),
+                      blurRadius: 15,
+                    ),
+                  ],
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(15.r),
                 ),
@@ -91,6 +98,7 @@ class _Home_ScreenState extends State<Home_Screen> {
                           width: 200.w,
                           height: 150.h,
                           child: CachedImage(
+                            radius: 15.r,
                             imageUrl: products[index].image,
                           ),
                         )),

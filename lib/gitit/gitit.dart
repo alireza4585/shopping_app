@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shopping_app/data/datasource/banner_datasource.dart';
+import 'package:shopping_app/data/datasource/product_detail_darasource.dart';
 import 'package:shopping_app/data/datasource/products_datasource.dart';
 import 'package:shopping_app/data/repository/banner_repository.dart';
+import 'package:shopping_app/data/repository/product_detail_repository.dart';
 import 'package:shopping_app/data/repository/products_repository.dart';
 import 'package:shopping_app/util/dio.dart';
 
@@ -21,9 +23,13 @@ Future<void> _initComponents() async {
 Future<void> _initDatasoruces() async {
   locator.registerFactory<IBannerDatasource>(() => BannerRemoteDatasource());
   locator.registerFactory<IProductDatasource>(() => ProductRemoteDatasource());
+  locator
+      .registerFactory<IProductDetailDatasource>(() => IproductDetailRemote());
 }
 
 void _initRepositories() {
   locator.registerFactory<IBannerRepository>(() => BannerRepository());
   locator.registerFactory<IProductRepository>(() => ProductRepository());
+  locator.registerFactory<IProductDetailRepository>(
+      () => ProductDetailRepository());
 }
