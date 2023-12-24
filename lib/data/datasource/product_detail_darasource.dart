@@ -4,15 +4,20 @@ import 'package:shopping_app/gitit/gitit.dart';
 import 'package:shopping_app/util/exception.dart';
 
 abstract class IProductDetailDatasource {
-  Future<List<Product_detail>> getDetail();
+  Future<List<Product_detail>> getDetail(String id);
 }
 
 class IproductDetailRemote extends IProductDetailDatasource {
   final Dio _dio = locator.get();
   @override
-  Future<List<Product_detail>> getDetail() async {
+  Future<List<Product_detail>> getDetail(String id) async {
+    Map<String, dynamic> qParams = {
+      'filter': 'product.id="$id"',
+      'expand': 'product',
+    };
     try {
-      var response = await _dio.get('collections/products_Detail/records');
+      var response = await _dio.get('collections/products_Detail/records',
+          queryParameters: qParams);
       return response.data['items']
           .map<Product_detail>(
               (jsonObject) => Product_detail.fromJson(jsonObject))
