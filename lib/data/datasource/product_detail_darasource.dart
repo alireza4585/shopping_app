@@ -12,8 +12,8 @@ class IproductDetailRemote extends IProductDetailDatasource {
   @override
   Future<List<Product_detail>> getDetail(String id) async {
     Map<String, dynamic> qParams = {
-      'filter': 'product.id="$id"',
       'expand': 'product',
+      'filter': 'product.id="$id"',
     };
     try {
       var response = await _dio.get('collections/products_Detail/records',

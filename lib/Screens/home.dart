@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shopping_app/Screens/product_detail_screen.dart';
 import 'package:shopping_app/constants/colors.dart';
 import 'package:shopping_app/data/bloc/home_bloc/home_bloc.dart';
+import 'package:shopping_app/data/bloc/product_bloc/product_bloc.dart';
+import 'package:shopping_app/data/bloc/product_bloc/product_event.dart';
 import 'package:shopping_app/data/model/banner.dart';
 import 'package:shopping_app/data/model/products.dart';
 import 'package:shopping_app/data/repository/banner_repository.dart';
@@ -72,8 +74,15 @@ class _Home_ScreenState extends State<Home_Screen> {
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (BuildContext context) => ProductDetailScreen(
-                      index: index,
+                    builder: (BuildContext context) => BlocProvider(
+                      create: (context) {
+                        var bloc = ProductBloc();
+                        bloc.add(ProductGetInitilzeData(products[index].id));
+                        return bloc;
+                      },
+                      child: ProductDetailScreen(
+                        index: index,
+                      ),
                     ),
                   ),
                 );

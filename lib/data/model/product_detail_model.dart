@@ -1,10 +1,10 @@
 class Product_detail {
-  String rank;
+  double rank;
   String id;
   String collectionId;
   String explain;
   List images;
-  String sizes;
+  // String sizes;
   List imageUrl = [];
   String name;
   double price;
@@ -15,7 +15,7 @@ class Product_detail {
     this.explain,
     this.images,
     this.rank,
-    this.sizes,
+    // this.sizes,
     this.collectionId,
     this.id,
     this.discount,
@@ -23,7 +23,7 @@ class Product_detail {
     this.name,
     this.price,
   ) {
-    for (int i = 0; i <= images.length; i++) {
+    for (int i = 0; i < images.length; i++) {
       imageUrl.add(
           'https://pocketbase--bmabfep1.iran.liara.run/api/files/${collectionId}/${id}/${images[i]}');
     }
@@ -34,8 +34,8 @@ class Product_detail {
       jsonObject['explain'],
       jsonObject['images'],
       jsonObject['rank'],
-      jsonObject['sizes'],
-      jsonObject['sizes'],
+      // jsonObject['sizes'],
+      jsonObject['collectionId'],
       jsonObject['id'],
       jsonObject['expand']['product']['discount'],
       jsonObject['expand']['product']['have_discount'],
