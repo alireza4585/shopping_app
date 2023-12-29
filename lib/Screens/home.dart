@@ -15,16 +15,17 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../data/bloc/home_bloc/home_state.dart';
 
-class Home_Screen extends StatefulWidget {
-  const Home_Screen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<Home_Screen> createState() => _Home_ScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
 final _control = PageController();
 
-class _Home_ScreenState extends State<Home_Screen> {
+class _HomeScreenState extends State<HomeScreen> {
+  // ignore: unused_field
   IBannerRepository _bannerRepository = locator.get();
 
   @override

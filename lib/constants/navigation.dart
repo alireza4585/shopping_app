@@ -10,7 +10,12 @@ class Navi extends StatefulWidget {
 }
 
 int index = 0;
-List Screen = [Home_Screen(), Home_Screen(), Home_Screen(), Home_Screen()];
+List Screen = [
+  const HomeScreen(),
+  const HomeScreen(),
+  HomeScreen(),
+  HomeScreen(),
+];
 
 class _NaviState extends State<Navi> {
   @override

@@ -15,7 +15,7 @@ class Navigation extends StatelessWidget {
         bloc.add(HomeGetInitilzeData());
         return bloc;
       },
-      child: Home_Screen(),
+      child: const HomeScreen(),
     );
   }
 }

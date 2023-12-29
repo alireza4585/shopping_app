@@ -1,4 +1,3 @@
-import 'package:either_dart/either.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -150,7 +149,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       ),
                     ),
                     child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 2, horizontal: 6),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 2.h, horizontal: 6.w),
                       child: Text(
                         '% ${product[0].discount.toString()} ',
                         style: TextStyle(
@@ -339,6 +339,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
+  // ignore: non_constant_identifier_names
   SliverAppBar MainImage(BuildContext context, List<Product_detail> product) {
     return SliverAppBar(
       flexibleSpace: FlexibleSpaceBar(
@@ -398,7 +399,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         onTap: () {
           Navigator.of(context).pop(
             MaterialPageRoute(
-              builder: (BuildContext context) => const Home_Screen(),
+              builder: (BuildContext context) => const HomeScreen(),
             ),
           );
         },

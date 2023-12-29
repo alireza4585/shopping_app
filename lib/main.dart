@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shopping_app/Screens/navigaion.dart';
+import 'package:shopping_app/auth/auth.dart';
 import 'package:shopping_app/gitit/gitit.dart';
 
 void main() async {
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
       designSize: Size(430, 932),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: Navigation(),
+        home: AuthPage(),
       ),
     );
   }
