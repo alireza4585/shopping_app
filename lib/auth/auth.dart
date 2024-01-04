@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_app/Screens/login_screen.dart';
 import 'package:shopping_app/Screens/signup_screen.dart';
+import 'package:shopping_app/data/bloc/auth_bloc/auth_bloc.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
@@ -21,9 +22,15 @@ class _AuthPageState extends State<AuthPage> {
   @override
   Widget build(BuildContext context) {
     if (a) {
-      return LoginScreen(show: go);
+      return BlocProvider(
+        create: (context) => AuthBloc(),
+        child: LoginScreen(show: go),
+      );
     } else {
-      return SignUPScreen(show: go);
+      return BlocProvider(
+        create: (context) => AuthBloc(),
+        child: SignUPScreen(show: go),
+      );
     }
   }
 }

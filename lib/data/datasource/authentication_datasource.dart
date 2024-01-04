@@ -20,7 +20,7 @@ class AuthenticationRemote extends IAuthenticationDatasource {
     try {
       final response = await _dio.post('collections/users/records', data: {
         'email': Email,
-        'name': name,
+        'username': name,
         'password': Password,
         'passwordConfirm': Confirmpassword,
       });
@@ -39,8 +39,9 @@ class AuthenticationRemote extends IAuthenticationDatasource {
   @override
   Future<String> login(String Email, String Password) async {
     try {
-      final response = await _dio.post('collections/users/records', data: {
-        'email': Email,
+      final response =
+          await _dio.post('collections/users/auth-with-password', data: {
+        'identity': Email,
         'password': Password,
       });
       if (response.statusCode == 200) {

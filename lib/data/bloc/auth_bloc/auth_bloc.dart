@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:shopping_app/data/bloc/auth_bloc/auth_event.dart';
 import 'package:shopping_app/data/bloc/auth_bloc/auth_state.dart';
-import 'package:shopping_app/data/bloc/home_bloc/home_state.dart';
 import 'package:shopping_app/data/repository/authentication_repository.dart';
 import 'package:shopping_app/data/repository/products_repository.dart';
 import 'package:shopping_app/gitit/gitit.dart';
