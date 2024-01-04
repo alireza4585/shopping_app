@@ -323,7 +323,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ),
             SizedBox(height: 10.h),
             Padding(
-              padding: EdgeInsets.only(bottom: 20.w),
+              padding: EdgeInsets.only(bottom: 100.h),
               child: Text(
                 product[0].explain,
                 style: TextStyle(

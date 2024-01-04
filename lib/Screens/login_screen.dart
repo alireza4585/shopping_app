@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shopping_app/auth/main_auth.dart';
+import 'package:shopping_app/data/bloc/auth_bloc/auth_bloc.dart';
+import 'package:shopping_app/data/bloc/auth_bloc/auth_event.dart';
+import 'package:shopping_app/data/bloc/auth_bloc/auth_state.dart';
 
 class LoginScreen extends StatefulWidget {
   final VoidCallback show;
@@ -42,26 +47,75 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
         backgroundColor: Colors.grey.shade200,
         body: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                logo(),
-                SizedBox(height: 10.h),
-                textfild(),
-                SizedBox(height: 15.w),
-                textfild2(),
-                SizedBox(height: 8.h),
-                have(),
-                SizedBox(height: 20.h),
-                signIN(),
-                SizedBox(height: 15.h),
-                or(),
-                SizedBox(height: 15.h),
-                WithGoogle(),
-                SizedBox(height: 10.h),
-                WithApple(),
-              ],
-            ),
+          child: Column(
+            children: [
+              logo(),
+              SizedBox(height: 10.h),
+              textfild(),
+              SizedBox(height: 15.w),
+              textfild2(),
+              SizedBox(height: 8.h),
+              have(),
+              SizedBox(height: 20.h),
+              BlocConsumer<AuthBloc, AuthState>(
+                listener: (context, state) {
+                  if (state is AuthRequestSuccessState) {
+                    state.response.fold((left) {
+                      email.text = '';
+                      password.text = '';
+                      var snackbar = SnackBar(
+                        content: Text(
+                          left,
+                          style: TextStyle(fontFamily: 'dana', fontSize: 14),
+                        ),
+                        backgroundColor: Colors.black,
+                        behavior: SnackBarBehavior.floating,
+                        duration: Duration(seconds: 1),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                    }, (right) {
+                      Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) => MainAuth()));
+                    });
+                  }
+                },
+                builder: (context, state) {
+                  if (state is AuthLoadingState) {
+                    return CircularProgressIndicator();
+                  }
+                  if (state is AuthInitState) {
+                    return Login();
+                  }
+                  if (state is AuthRequestSuccessState) {
+                    Widget widget = Text('');
+                    state.response.fold((l) {
+                      widget = ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          textStyle: TextStyle(fontSize: 20),
+                          backgroundColor: Colors.black,
+                          minimumSize: Size(200, 48),
+                        ),
+                        onPressed: () {
+                          BlocProvider.of<AuthBloc>(context)
+                              .add(AuthLoginRequest(email.text, password.text));
+                        },
+                        child: Text('enter'),
+                      );
+                    }, (r) {
+                      widget = Text(r);
+                    });
+                    return widget;
+                  }
+                  return Text('');
+                },
+              ),
+              SizedBox(height: 15.h),
+              or(),
+              SizedBox(height: 15.h),
+              WithGoogle(),
+              SizedBox(height: 10.h),
+              WithApple(),
+            ],
           ),
         ));
   }
@@ -92,11 +146,14 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Padding signIN() {
+  Padding Login() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 15.w),
       child: GestureDetector(
-        onTap: () {},
+        onTap: () {
+          BlocProvider.of<AuthBloc>(context)
+              .add(AuthLoginRequest(email.text, password.text));
+        },
         child: Container(
           alignment: Alignment.center,
           width: double.infinity,
@@ -106,7 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
             borderRadius: BorderRadius.circular(10.r),
           ),
           child: Text(
-            'Sign In',
+            'Login',
             style: TextStyle(
               color: Colors.white,
               fontSize: 23.sp,
